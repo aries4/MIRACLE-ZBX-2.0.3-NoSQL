@@ -93,9 +93,15 @@ sub zabbix_receiver
 	# print the variable bindings:
 	print OUTPUT_FILE "VARBINDS:\n";
 	foreach my $x (@varbinds)
-	{
-		printf OUTPUT_FILE "  %-30s type=%-2d value=%s\n", $x->[0], $x->[2], $x->[1];
-	}
+        {
+                $substr = 'Hex-STRING';
+                $str = $x->[1];
+                if (index($str, $substr)!= -1) {
+                $str =~ s/\s+//g;
+                $str =~ s/([a-fA-F0-9][a-fA-F0-9])/chr(hex($1))/eg;
+                }
+                printf OUTPUT_FILE "  %-30s type=%-2d value=%s\n", $x->[0], $x->[2], $str;
+        }
 
 	close (OUTPUT_FILE);
 
